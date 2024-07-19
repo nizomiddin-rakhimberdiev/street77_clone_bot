@@ -16,6 +16,86 @@ class Database:
                             ''')
         self.conn.commit()
 
+    def create_filial_table(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS filials
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              name VARCHAR(255) NOT NULL,
+                              address VARCHAR(255) NOT NULL,
+                              latitude REAL NOT NULL,
+                              longitude REAL NOT NULL)
+                            ''')
+        self.conn.commit()
+
+    def add_filial(self, name, address, latitude, longitude):
+        self.cursor.execute("INSERT INTO filials (name, address, latitude, longitude) VALUES (?,?,?,?)", (name, address, latitude, longitude))
+        self.conn.commit()
+
+
+    def get_filials(self):
+        self.cursor.execute("SELECT * FROM filials")
+        return self.cursor.fetchall()
+    
+
+    def create_category_table(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS categories
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              name VARCHAR(255) NOT NULL)
+                            ''')
+        self.conn.commit()
+
+    def add_category(self, name):
+        self.cursor.execute("INSERT INTO categories (name) VALUES (?)", (name,))
+        self.conn.commit()
+
+    def get_category(self):
+        self.cursor.execute("SELECT * FROM categories")
+        return self.cursor.fetchall()
+    
+    def get_products(self, category_id):
+        self.cursor.execute("SELECT * FROM products WHERE category_id =?", (category_id,))
+        return self.cursor.fetchall()
+
+
+    def create_product_table(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS products
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              name VARCHAR(255) NOT NULL,
+                              price REAL NOT NULL,
+                              description TEXT,
+                              category_id INTEGER NOT NULL,
+                              FOREIGN KEY (category_id) REFERENCES categories(id))
+                            ''')
+        self.conn.commit()
+
+    def add_product(self, name, price, description, category_id):
+        self.cursor.execute("INSERT INTO products (name, price, description, category_id) VALUES (?,?,?,?)", (name, price, description, category_id))
+        self.conn.commit()
+    
+
+    def create_orders_table(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS orders
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              user_id INTEGER NOT NULL,
+                              filial_id INTEGER NOT NULL,
+                              product_id INTEGER NOT NULL,
+                              order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              status VARCHAR(255) NOT NULL DEFAULT 'pending',
+                              order_type VARCHAR(255) NOT NULL,
+                              order_address VARCHAR(255),                              
+                              FOREIGN KEY (user_id) REFERENCES users(id),
+                              FOREIGN KEY (filial_id) REFERENCES filials(id)
+                              FOREIGN KEY (product_id) REFERENCES products(id)
+                            )
+                            ''')
+        self.conn.commit()  
+
+    def add_order(self, user_id, filial_id, product_id, order_type, order_address):
+        self.cursor.execute('INSERT INTO (user_id, filial_id, product_id, order_type, order_address) VALUES (?, ?, ?, ?, ?)', (user_id, filial_id, product_id, order_type, order_address))
+
+
+    def get_orders(self):
+        self.cursor.execute("SELECT * FROM orders")
+        return self.cursor.fetchall()
 
     def add_user(self, user_id, language, city):
         self.cursor.execute("INSERT INTO users (user_id, language, city) VALUES (?,?,?)", (user_id, language, city))
@@ -24,3 +104,37 @@ class Database:
     def get_users_id(self):
         self.cursor.execute("SELECT user_id FROM users")
         return self.cursor.fetchall()
+    
+
+    def change_user_role(self, user_id):
+        self.cursor.execute("UPDATE users SET user_role='admin' WHERE user_id=?", (user_id,))
+        self.conn.commit()
+
+    def create_filials(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS filials
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              name VARCHAR(255) NOT NULL,
+                              address VARCHAR(255) NOT NULL,
+                              latitude REAL NOT NULL,
+                              longitude REAL NOT NULL)
+                            ''')
+        self.conn.commit()
+
+    def get_filials(self):
+        self.cursor.execute("SELECT name FROM filials")
+        return self.cursor.fetchall()
+    
+    def add_filial(self, name, address, latitude, longitude):
+        self.cursor.execute("INSERT INTO filials (name, address, latitude, longitude) VALUES (?,?,?,?)", (name, address, latitude, longitude))
+        self.conn.commit()
+
+    
+    
+    def create_products(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS products
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              name VARCHAR(255) NOT NULL,
+                              price REAL NOT NULL,
+                              category VARCHAR(255) NOT NULL)
+                            ''')
+        self.conn.commit()

@@ -48,3 +48,20 @@ main_menu = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True,
 )
+
+
+admin_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Add filial'),
+            KeyboardButton(text='Add category'),
+            KeyboardButton(text='Add product')
+        ],
+        [
+            KeyboardButton(text='Get filial'),
+            KeyboardButton(text='Get category'),
+            KeyboardButton(text='Get product')
+        ]
+    ],
+    resize_keyboard=True,
+)

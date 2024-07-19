@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher import FSMContext
+from data.config import ADMINS
 from keyboards.default.default_keyboards import languages, cities, main_menu
 from states.all_states import RegisterState
 
@@ -9,21 +10,20 @@ from loader import dp, db
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
-    db.create_users_table()
-    db_users = db.get_users_id()
-    users = []
-    for user in db_users:
-        users.append(user[0])
-    print(users)
-    if message.from_user.id in users:
-            await message.answer("Bosh menyu", reply_markup=main_menu)
-    else:
-        await message.answer("""Здравствуйте! Давайте для начала выберем язык обслуживания!
+        db_users = db.get_users_id()
+        users = []
+        for user in db_users:
+            users.append(user[0])
+        print(users)
+        if message.from_user.id in users:
+                await message.answer("Bosh menyu", reply_markup=main_menu)
+        else:
+            await message.answer("""Здравствуйте! Давайте для начала выберем язык обслуживания!
 
-Keling, avvaliga xizmat ko’rsatish tilini tanlab olaylik.
+    Keling, avvaliga xizmat ko’rsatish tilini tanlab olaylik.
 
-Hi! Let's first we choose language of serving!""", reply_markup=languages)
-        await RegisterState.language.set()
+    Hi! Let's first we choose language of serving!""", reply_markup=languages)
+            await RegisterState.language.set()
 
 
 @dp.message_handler(lambda msg: msg.text in ["🇷🇺 Русский", "🇺🇿 O'zbekcha", "🇬🇧 English"],state=RegisterState.language)
