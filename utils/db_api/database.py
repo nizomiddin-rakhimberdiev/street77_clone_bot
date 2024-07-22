@@ -6,7 +6,7 @@ class Database:
         self.cursor = self.conn.cursor()
 
 
-    def create_users_table(self):
+    def create_tables(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS users
                              (id INTEGER PRIMARY KEY AUTOINCREMENT,
                               user_id INTEGER NOT NULL UNIQUE,
@@ -14,9 +14,12 @@ class Database:
                               city VARCHAR(20) NOT NULL,
                               user_role VARCHAR(255) NOT NULL DEFAULT 'customer')
                             ''')
-        self.conn.commit()
 
-    def create_filial_table(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS categories
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              name VARCHAR(255) NOT NULL UNIQUE)
+                            ''')
+        
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS filials
                              (id INTEGER PRIMARY KEY AUTOINCREMENT,
                               name VARCHAR(255) NOT NULL,
@@ -24,39 +27,7 @@ class Database:
                               latitude REAL NOT NULL,
                               longitude REAL NOT NULL)
                             ''')
-        self.conn.commit()
-
-    def add_filial(self, name, address, latitude, longitude):
-        self.cursor.execute("INSERT INTO filials (name, address, latitude, longitude) VALUES (?,?,?,?)", (name, address, latitude, longitude))
-        self.conn.commit()
-
-
-    def get_filials(self):
-        self.cursor.execute("SELECT * FROM filials")
-        return self.cursor.fetchall()
-    
-
-    def create_category_table(self):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS categories
-                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                              name VARCHAR(255) NOT NULL)
-                            ''')
-        self.conn.commit()
-
-    def add_category(self, name):
-        self.cursor.execute("INSERT INTO categories (name) VALUES (?)", (name,))
-        self.conn.commit()
-
-    def get_category(self):
-        self.cursor.execute("SELECT * FROM categories")
-        return self.cursor.fetchall()
-    
-    def get_products(self, category_id):
-        self.cursor.execute("SELECT * FROM products WHERE category_id =?", (category_id,))
-        return self.cursor.fetchall()
-
-
-    def create_product_table(self):
+        
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS products
                              (id INTEGER PRIMARY KEY AUTOINCREMENT,
                               name VARCHAR(255) NOT NULL,
@@ -65,14 +36,7 @@ class Database:
                               category_id INTEGER NOT NULL,
                               FOREIGN KEY (category_id) REFERENCES categories(id))
                             ''')
-        self.conn.commit()
-
-    def add_product(self, name, price, description, category_id):
-        self.cursor.execute("INSERT INTO products (name, price, description, category_id) VALUES (?,?,?,?)", (name, price, description, category_id))
-        self.conn.commit()
-    
-
-    def create_orders_table(self):
+        
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS orders
                              (id INTEGER PRIMARY KEY AUTOINCREMENT,
                               user_id INTEGER NOT NULL,
@@ -87,7 +51,41 @@ class Database:
                               FOREIGN KEY (product_id) REFERENCES products(id)
                             )
                             ''')
-        self.conn.commit()  
+        
+        self.conn.commit()
+
+
+
+    def add_filial(self, name, address, latitude, longitude):
+        self.cursor.execute("INSERT INTO filials (name, address, latitude, longitude) VALUES (?,?,?,?)", (name, address, latitude, longitude))
+        self.conn.commit()
+
+
+    def get_filials(self):
+        self.cursor.execute("SELECT * FROM filials")
+        return self.cursor.fetchall()
+    
+
+
+    def add_category(self, name):
+        self.cursor.execute("INSERT INTO categories (name) VALUES (?)", (name,))
+        self.conn.commit()
+
+    def get_category(self):
+        self.cursor.execute("SELECT * FROM categories")
+        return self.cursor.fetchall()
+    
+    def get_products(self, category_id):
+        self.cursor.execute("SELECT * FROM products WHERE category_id =?", (category_id,))
+        return self.cursor.fetchall()
+
+
+
+    def add_product(self, name, price, description, category_id):
+        self.cursor.execute("INSERT INTO products (name, price, description, category_id) VALUES (?,?,?,?)", (name, price, description, category_id))
+        self.conn.commit()
+    
+ 
 
     def add_order(self, user_id, filial_id, product_id, order_type, order_address):
         self.cursor.execute('INSERT INTO (user_id, filial_id, product_id, order_type, order_address) VALUES (?, ?, ?, ?, ?)', (user_id, filial_id, product_id, order_type, order_address))
