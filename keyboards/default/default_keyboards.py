@@ -1,4 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from  loader import db
 
 
 languages = ReplyKeyboardMarkup(
@@ -65,3 +66,35 @@ admin_menu = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True,
 )
+
+
+filial_loc = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton("Send locations", request_location=True)
+        ]
+    ]
+)
+
+
+async def get_filials_btn():
+    filails = db.get_filials()
+
+    filials_btn = ReplyKeyboardMarkup(
+            keyboard=[
+                [
+                    KeyboardButton("📍 Eng yaqin filialni aniqlash")
+                ]
+            ],
+            resize_keyboard=True,
+            row_width=2)
+        
+    btns = []
+
+    for filial in filails:
+            print(filial)
+            btns.append(KeyboardButton(text=filial[0]))
+
+    filials_btn.add(*btns)
+
+    return filials_btn

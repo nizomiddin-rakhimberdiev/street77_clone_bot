@@ -8,3 +8,8 @@ class RegisterState(StatesGroup):
 
 class AddCategoryState(StatesGroup):
     name = State()
+
+
+class AddFilialState(StatesGroup):
+    name = State()
+    lat_long = State()

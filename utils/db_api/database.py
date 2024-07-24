@@ -55,7 +55,6 @@ class Database:
         self.conn.commit()
 
 
-
     def add_filial(self, name, address, latitude, longitude):
         self.cursor.execute("INSERT INTO filials (name, address, latitude, longitude) VALUES (?,?,?,?)", (name, address, latitude, longitude))
         self.conn.commit()
@@ -71,7 +70,7 @@ class Database:
         self.cursor.execute("INSERT INTO categories (name) VALUES (?)", (name,))
         self.conn.commit()
 
-    def get_category(self):
+    def get_categories(self):
         self.cursor.execute("SELECT * FROM categories")
         return self.cursor.fetchall()
     
