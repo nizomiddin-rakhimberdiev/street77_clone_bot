@@ -13,3 +13,16 @@ class AddCategoryState(StatesGroup):
 class AddFilialState(StatesGroup):
     name = State()
     lat_long = State()
+
+
+class AddProductState(StatesGroup):
+    name = State()
+    price = State()
+    description = State()
+    image = State()
+    category_id = State()
+
+
+class GetProductState(StatesGroup):
+    category = State()
+    product = State()

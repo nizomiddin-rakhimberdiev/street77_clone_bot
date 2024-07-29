@@ -30,9 +30,10 @@ class Database:
         
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS products
                              (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                              name VARCHAR(255) NOT NULL,
+                              name VARCHAR(255) NOT NULL UNIQUE,
                               price REAL NOT NULL,
                               description TEXT,
+                              image Text,
                               category_id INTEGER NOT NULL,
                               FOREIGN KEY (category_id) REFERENCES categories(id))
                             ''')
@@ -77,11 +78,19 @@ class Database:
     def get_products(self, category_id):
         self.cursor.execute("SELECT * FROM products WHERE category_id =?", (category_id,))
         return self.cursor.fetchall()
+    
 
+    def get_product(self, product_id):
+        self.cursor.execute("SELECT * FROM products WHERE id =?", (product_id,))
+        return self.cursor.fetchall()[0]
 
-
-    def add_product(self, name, price, description, category_id):
-        self.cursor.execute("INSERT INTO products (name, price, description, category_id) VALUES (?,?,?,?)", (name, price, description, category_id))
+    def check_product(self, name):
+        self.cursor.execute("SELECT name FROM products WHERE name =?", (name,))
+        print(self.cursor.fetchone())
+        return self.cursor.fetchone()
+    
+    def add_product(self, name, price, description, image, category_id):
+        self.cursor.execute("INSERT INTO products (name, price, description, image, category_id) VALUES (?,?,?,?,?)", (name, price, description, image, category_id))
         self.conn.commit()
     
  
@@ -107,16 +116,6 @@ class Database:
         self.cursor.execute("UPDATE users SET user_role='admin' WHERE user_id=?", (user_id,))
         self.conn.commit()
 
-    def create_filials(self):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS filials
-                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                              name VARCHAR(255) NOT NULL,
-                              address VARCHAR(255) NOT NULL,
-                              latitude REAL NOT NULL,
-                              longitude REAL NOT NULL)
-                            ''')
-        self.conn.commit()
-
     def get_filials(self):
         self.cursor.execute("SELECT name FROM filials")
         return self.cursor.fetchall()
@@ -134,4 +133,8 @@ class Database:
                               price REAL NOT NULL,
                               category VARCHAR(255) NOT NULL)
                             ''')
+        self.conn.commit()
+
+    def drop_table(self):
+        self.cursor.execute('''Drop table products''')
         self.conn.commit()
