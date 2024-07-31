@@ -26,3 +26,9 @@ class AddProductState(StatesGroup):
 class GetProductState(StatesGroup):
     category = State()
     product = State()
+
+class YetkazishState(StatesGroup):
+    lokatsiya = State()
+    category = State()
+    product = State()
+    savat = State()

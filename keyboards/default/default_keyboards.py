@@ -98,3 +98,16 @@ async def get_filials_btn():
     filials_btn.add(*btns)
 
     return filials_btn
+
+zakaz_turi = ReplyKeyboardMarkup(
+      keyboard=[
+          [
+              KeyboardButton(text="🚘 Yetkazib berish"),
+              KeyboardButton(text= "🏃 Olib ketish")
+          ],
+          [
+                KeyboardButton(text= "⬅️ Ortga")
+          ]
+      ],
+      resize_keyboard=True,
+)

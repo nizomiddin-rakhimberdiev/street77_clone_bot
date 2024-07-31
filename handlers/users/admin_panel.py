@@ -16,7 +16,7 @@ class AdminFilter(BoundFilter):
 
 
 
-@dp.message_handler(AdminFilter(), commands=['start'])
+@dp.message_handler(AdminFilter(), commands=['admin'])
 async def start_admin(message: types.Message):
     await message.answer("Admin menu", reply_markup=admin_menu)
 
