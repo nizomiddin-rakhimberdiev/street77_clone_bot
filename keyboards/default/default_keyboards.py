@@ -44,7 +44,8 @@ main_menu = ReplyKeyboardMarkup(
             KeyboardButton(text="☎️ Biz bilan aloqa"),
         ],
         [
-            KeyboardButton(text="⚙️ Sozlamalar"),
+            KeyboardButton(text="🛍 Savat"),
+            KeyboardButton(text="⚙️ Sozlamalar")
         ],
     ],
     resize_keyboard=True,

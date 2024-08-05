@@ -53,12 +53,33 @@ class Database:
                             )
                             ''')
         
+        self.cursor.execute('''
+        CREATE TABLE IF NOT EXISTS basket (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            product_name VARCHAR(255),
+            count INTEGER,
+            total_price INTEGER)
+                            ''')
+        
         self.conn.commit()
 
 
     def add_filial(self, name, address, latitude, longitude):
         self.cursor.execute("INSERT INTO filials (name, address, latitude, longitude) VALUES (?,?,?,?)", (name, address, latitude, longitude))
         self.conn.commit()
+
+    
+    def add_basket(self, user_id, product_name, count, total_price):
+        self.cursor.execute('INSERT INTO basket (user_id, product_name, count, total_price) VALUES (?,?,?,?)', (user_id, product_name, count, total_price))
+        self.conn.commit()
+
+    
+    def get_my_basket(self, user_id):
+        self.cursor.execute("SELECT product_name, count, total_price FROM basket WHERE user_id =?", (user_id,))
+        basket = self.cursor.fetchall()
+        # self.con.close()
+        return basket
 
 
     def get_filials(self):
@@ -134,6 +155,19 @@ class Database:
                               category VARCHAR(255) NOT NULL)
                             ''')
         self.conn.commit()
+
+
+    def get_product_name(self, product_id):
+        self.cursor.execute("SELECT name FROM products WHERE id =?", (product_id,))
+        product_name = self.cursor.fetchone()[0]
+        # self.con.close()
+        return product_name
+    
+    def get_product_price(self, product_id):
+        self.cursor.execute("SELECT price FROM products WHERE id =?", (product_id,))
+        product_name = self.cursor.fetchone()[0]
+        # self.con.close()
+        return product_name
 
     def drop_table(self):
         self.cursor.execute('''Drop table products''')

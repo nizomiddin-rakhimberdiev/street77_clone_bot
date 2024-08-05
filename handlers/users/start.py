@@ -8,8 +8,9 @@ from states.all_states import RegisterState
 from loader import dp, db
 
 
-@dp.message_handler(CommandStart())
-async def bot_start(message: types.Message):
+@dp.message_handler(CommandStart(), state="*")
+async def bot_start(message: types.Message, state: FSMContext):
+        await state.finish()
         db_users = db.get_users_id()
         users = []
         for user in db_users:
